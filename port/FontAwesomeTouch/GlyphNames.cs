@@ -1,0 +1,240 @@
+using System;
+using System.Text;
+
+namespace FontAwesomeTouch
+{
+	public static class GlyphNames
+	{
+		public const string Glass            = "uniF000";
+		public const string Music            = "uniF001";
+		public const string Search           = "uniF002";
+		public const string Envelope         = "uniF003";
+		public const string Heart            = "uniF004";
+		public const string Star             = "uniF005";
+		public const string StarEmpty        = "uniF006";
+		public const string User             = "uniF007";
+		public const string Film             = "uniF008";
+		public const string THLarge          = "uniF009";
+		public const string TH               = "uniF00A";
+		public const string THList           = "uniF00B";
+		public const string OK               = "uniF00C";
+		public const string Remove           = "uniF00D";
+		public const string ZoomIn           = "uniF00E";
+
+		public const string ZoomOut          = "uniF010";
+		public const string Off              = "uniF011";
+		public const string Signal           = "uniF012";
+		public const string Cog              = "uniF013";
+		public const string Trash            = "uniF014";
+		public const string Home             = "uniF015";
+		public const string File             = "uniF016";
+		public const string Time             = "uniF017";
+		public const string Road             = "uniF018";
+		public const string DownloadAlt      = "uniF019";
+		public const string Download         = "uniF01A";
+		public const string Upload           = "uniF01B";
+		public const string Inbox            = "uniF01C";
+		public const string PlayCircle       = "uniF01D";
+		public const string Repeat           = "uniF01E";
+
+		public const string Refresh          = "uniF021";
+		public const string ListAlt          = "uniF022";
+		public const string Lock             = "uniF023";
+		public const string Flag             = "uniF024";
+		public const string Headphones       = "uniF025";
+		public const string VolumeOff        = "uniF026";
+		public const string VolumeDown       = "uniF027";
+		public const string VolumeUp         = "uniF028";
+		public const string QRCode           = "uniF029";
+		public const string BarCode          = "uniF02A";
+		public const string Tag              = "uniF02B";
+		public const string Tags             = "uniF02C";
+		public const string Book             = "uniF02D";
+		public const string Bookmark         = "uniF02E";
+		public const string Print            = "uniF02F";
+
+		public const string Camera           = "uniF030";
+		public const string Font             = "uniF031";
+		public const string Bold             = "uniF032";
+		public const string Italic           = "uniF033";
+		public const string TextHeight       = "uniF034";
+		public const string TextWidth        = "uniF035";
+		public const string AlignLeft        = "uniF036";
+		public const string AlignCenter      = "uniF037";
+		public const string AlignRight       = "uniF038";
+		public const string AlignJustify     = "uniF039";
+		public const string List             = "uniF03A";
+		public const string IndentLeft       = "uniF03B";
+		public const string IndentRight      = "uniF03C";
+		public const string FacetimeVideo    = "uniF03D";
+		public const string Picture          = "uniF03E";
+
+		public const string Pencil           = "uniF040";
+		public const string MapMarker        = "uniF041";
+		public const string Adjust           = "uniF042";
+		public const string Tint             = "uniF043";
+		public const string Edit             = "uniF044";
+		public const string Share            = "uniF045";
+		public const string Check            = "uniF046";
+		public const string Move             = "uniF047";
+		public const string StepBackward     = "uniF048";
+		public const string FastBackward     = "uniF049";
+		public const string Backward         = "uniF04A";
+		public const string Play             = "uniF04B";
+		public const string Pause            = "uniF04C";
+		public const string Stop             = "uniF04D";
+		public const string Forward          = "uniF04E";
+
+		public const string FastForward      = "uniF050";
+		public const string StepForward      = "uniF051";
+		public const string Eject            = "uniF052";
+		public const string ChevronLeft      = "uniF053";
+		public const string ChevronRight     = "uniF054";
+		public const string PlusSign         = "uniF055";
+		public const string MinusSign        = "uniF056";
+		public const string RemoveSign       = "uniF057";
+		public const string OKSign           = "uniF058";
+		public const string QuestionSign     = "uniF059";
+		public const string InfoSign         = "uniF05A";
+		public const string Screenshot       = "uniF05B";
+		public const string RemoveCircle     = "uniF05C";
+		public const string OKCircle         = "uniF05D";
+		public const string BanCircle        = "uniF05E";
+
+		public const string ArrowLeft        = "uniF060";
+		public const string ArrowRight       = "uniF061";
+		public const string ArrowUp          = "uniF062";
+		public const string ArrowDown        = "uniF063";
+		public const string ShareAlt         = "uniF064";
+		public const string ResizeFull       = "uniF065";
+		public const string ResizeSmall      = "uniF066";
+		public const string Plus             = "uniF067";
+		public const string Minus            = "uniF068";
+		public const string Asterisk         = "uniF069";
+		public const string ExclamationSign  = "uniF06A";
+		public const string Gift             = "uniF06B";
+		public const string Leaf             = "uniF06C";
+		public const string Fire             = "uniF06D";
+		public const string EyeOpen          = "uniF06E";
+
+		public const string EyeClose         = "uniF070";
+		public const string WarningSign      = "uniF071";
+		public const string Plane            = "uniF072";
+		public const string Calendar         = "uniF073";
+		public const string Random           = "uniF074";
+		public const string Comment          = "uniF075";
+		public const string Magnet           = "uniF076";
+		public const string ChevronUp        = "uniF077";
+		public const string ChevronDown      = "uniF078";
+		public const string Retweet          = "uniF079";
+		public const string ShoppingCart     = "uniF07A";
+		public const string FolderClose      = "uniF07B";
+		public const string FolderOpen       = "uniF07C";
+		public const string ResizeVertical   = "uniF07D";
+		public const string ResizeHorizontal = "uniF07E";
+
+		public const string BarChart         = "uniF080";
+		public const string TwitterSign      = "uniF081";
+		public const string FacebookSign     = "uniF082";
+		public const string CameraRetro      = "uniF083";
+		public const string Key              = "uniF084";
+		public const string Cogs             = "uniF085";
+		public const string Comments         = "uniF086";
+		public const string ThumbsUp         = "uniF087";
+		public const string ThumbsDown       = "uniF088";
+		public const string StarHalf         = "uniF089";
+		public const string HeartEmpty       = "uniF08A";
+		public const string Signout          = "uniF08B";
+		public const string LinkedinSign     = "uniF08C";
+		public const string Pushpin          = "uniF08D";
+		public const string ExternalLink     = "uniF08E";
+
+		public const string Signin           = "uniF090";
+		public const string Trophy           = "uniF091";
+		public const string GithubSign       = "uniF092";
+		public const string UploadAlt        = "uniF093";
+		public const string Lemon            = "uniF094";
+		public const string Phone            = "uniF095";
+		public const string CheckEmpty       = "uniF096";
+		public const string BookmarkEmpty    = "uniF097";
+		public const string PhoneSign        = "uniF098";
+		public const string Twitter          = "uniF099";
+		public const string Facebook         = "uniF09A";
+		public const string Github           = "uniF09B";
+		public const string Unlock           = "uniF09C";
+		public const string CreditCard       = "uniF09D";
+		public const string Rss              = "uniF09E";
+
+		public const string Hdd              = "uniF0A0";
+		public const string Bullhorn         = "uniF0A1";
+		public const string Bell             = "uniF0A2";
+		public const string Certificate      = "uniF0A3";
+		public const string HandRight        = "uniF0A4";
+		public const string HandLeft         = "uniF0A5";
+		public const string HandUp           = "uniF0A6";
+		public const string HandDown         = "uniF0A7";
+		public const string CircleArrowLeft  = "uniF0A8";
+		public const string CircleArrowRight = "uniF0A9";
+		public const string CircleArrowUp    = "uniF0AA";
+		public const string CircleArrowDown  = "uniF0AB";
+		public const string Globe            = "uniF0AC";
+		public const string Wrench           = "uniF0AD";
+		public const string Tasks            = "uniF0AE";
+        
+		public const string Filter           = "uniF0B0";
+		public const string Briefcase        = "uniF0B1";
+		public const string Fullscreen       = "uniF0B2";
+
+		public const string Group            = "uniF0C0";
+		public const string Link             = "uniF0C1";
+		public const string Cloud            = "uniF0C2";
+		public const string Beaker           = "uniF0C3";
+		public const string Cut              = "uniF0C4";
+		public const string Copy             = "uniF0C5";
+		public const string PaperClip        = "uniF0C6";
+		public const string Save             = "uniF0C7";
+		public const string SignBlank        = "uniF0C8";
+		public const string Reorder          = "uniF0C9";
+		public const string ListUL           = "uniF0CA";
+		public const string ListOL           = "uniF0CB";
+		public const string Strikethrough    = "uniF0CC";
+		public const string Underline        = "uniF0CD";
+		public const string Table            = "uniF0CE";
+
+		public const string Magic            = "uniF0D0";
+		public const string Truck            = "uniF0D1";
+		public const string Pinterest        = "uniF0D2";
+		public const string PinterestSign    = "uniF0D3";
+		public const string GooglePlusSign   = "uniF0D4";
+		public const string GooglePlus       = "uniF0D5";
+		public const string Money            = "uniF0D6";
+		public const string CaretDown        = "uniF0D7";
+		public const string CaretUp          = "uniF0D8";
+		public const string CaretLeft        = "uniF0D9";
+		public const string CaretRight       = "uniF0DA";
+		public const string Columns          = "uniF0DB";
+		public const string Sort             = "uniF0DC";
+		public const string SortDown         = "uniF0DD";
+		public const string SortUp           = "uniF0DE";
+        
+		public const string EnvelopeAlt      = "uniF0E0";
+		public const string Linkedin         = "uniF0E1";
+		public const string Undo             = "uniF0E2";
+		public const string Legal            = "uniF0E3";
+		public const string Dashboard        = "uniF0E4";
+		public const string CommentAlt       = "uniF0E5";
+		public const string CommentsAlt      = "uniF0E6";
+		public const string Bolt             = "uniF0E7";
+		public const string Sitemap          = "uniF0E8";
+		public const string Umbrella         = "uniF0E9";
+		public const string Paste            = "uniF0EA";
+
+//		public const string ??????           = "uniF105";
+
+		public const string UserMD           = "uniF200";
+//		public const string ??????           = "uniF201";
+//		public const string ??????           = "uniF202";
+//		public const string ??????           = "uniF203";
+//		public const string ??????           = "uniF204";
+    }
+}
