@@ -123,15 +123,21 @@ namespace FontAwesomeTouch
 #endif
 		}
 
-		public static CGImage GetImage (string glyphName, int width, int height
-		                                , float fontSize
+		public static CGImage GetImage (string glyphName, int widthUnit, int heightUnit
+		                                , float fontSizeUnit
 		                                , CGColor textColor
 		                                , CGColor backColor
-		                                , PointF position = default (PointF))
+		                                , PointF position = default (PointF)
+		                                , float scale=1f)
 		{
 			CGFont font = FontAwesomeUtil.Font;
 			if (font == null)
 				throw new InvalidOperationException ("Font not loaded");
+
+			int width = (int)(widthUnit * scale);
+			int height = (int)(heightUnit * scale);
+			float fontSize = fontSizeUnit * scale;
+			PointF posScaled = new PointF (position.X * scale, position.Y * scale);
 
 			CGImage cgImg = null;
 			byte[] bytes = new byte[width*height*4];
@@ -162,7 +168,7 @@ namespace FontAwesomeTouch
 				context.SetFontSize (fontSize);
 				context.ShowGlyphsAtPositions(
 					new ushort[] {font.GetGlyphWithGlyphName (glyphName)}
-					, new PointF[] { position }, 1);
+					, new PointF[] { posScaled }, 1);
 
 				cgImg = context.ToImage ();
 			}
@@ -170,15 +176,36 @@ namespace FontAwesomeTouch
 			return cgImg;
 		}
 
-		public static CGImage GetImageForBarItem (string glyphName)
+		public static UIImage GetUIImage (string glyphName, int width, int height
+		                                  , float fontSize
+		                                  , UIColor textColor
+		                                  , UIColor backColor
+		                                  , PointF position = default (PointF)
+		                                  , float scale = 0f)
+		{
+			if (scale == 0f)
+				scale = UIScreen.MainScreen.Scale;
+
+			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, position, scale);
+			return new UIImage (cgImg, scale, UIImageOrientation.Up);
+		}
+
+
+		// Get square sized image
+		public static CGImage GetImageForBarItem (string glyphName, int sizeUnit=20, float scale=1f)
 		{
 			CGFont font = FontAwesomeUtil.Font;
 			if (font == null)
 				throw new InvalidOperationException ("Font not loaded");
 
+			int size = (int)(sizeUnit * scale);
+
+			float offsetX = (float)sizeUnit / 8.575f;
+			float offsetY = (float)sizeUnit / 7.52f;
+
 			CGImage cgImg = null;
-			byte[] bytes = new byte[20*20*4];
-			using (var context = new CGBitmapContext (bytes, 20, 20, 8, 20*4
+			byte[] bytes = new byte[size * size * 4];
+			using (var context = new CGBitmapContext (bytes, size, size, 8, size*4
 			                                          , CGColorSpace.CreateDeviceRGB ()
 			                                          , CGImageAlphaInfo.PremultipliedFirst))
 			{
@@ -196,13 +223,23 @@ namespace FontAwesomeTouch
 				context.SetFillColor (1f, 1f);
 				context.SetTextDrawingMode (CGTextDrawingMode.Fill);
 				context.SetFont (font);
-				context.SetFontSize (20f);
-				context.ShowGlyphsAtPoint (1f, 1f, new ushort[] {font.GetGlyphWithGlyphName (glyphName)});
+				context.SetFontSize ((float)size);
+				// TODO: measure the glyph size and arrange
+				context.ShowGlyphsAtPoint (offsetX*scale, offsetY*scale, new ushort[] {font.GetGlyphWithGlyphName (glyphName)});
 
 				cgImg = context.ToImage ();
 			}
 
 			return cgImg;
+		}
+
+		public static UIImage GetUIImageForBarItem (string glyphName, int sizeUnit=20, float scale=0f)
+		{
+			if (scale == 0f)
+				scale = UIScreen.MainScreen.Scale;
+
+			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale);
+			return new UIImage (cgImg, scale, UIImageOrientation.Up);
 		}
 
 		static bool isLoading;
