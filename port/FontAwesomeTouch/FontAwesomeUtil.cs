@@ -11,6 +11,7 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
+using MonoTouch.CoreText;
 
 namespace FontAwesomeTouch
 {
@@ -127,118 +128,155 @@ namespace FontAwesomeTouch
 		                                , float fontSizeUnit
 		                                , CGColor textColor
 		                                , CGColor backColor
-		                                , PointF position = default (PointF)
-		                                , float scale=1f)
+		                                , float? scaleOrNull = null
+		                                , PointF? offsetOrNull = null)
 		{
-			CGFont font = FontAwesomeUtil.Font;
-			if (font == null)
-				throw new InvalidOperationException ("Font not loaded");
-
+			float scale = scaleOrNull ?? ScaleForDevice;
+			float fontSize = fontSizeUnit * scale;
+			var ctfont = new CTFont (FontAwesomeUtil.Font, fontSize, CGAffineTransform.MakeIdentity ());
+			ushort[] glyphs =new ushort[] { ctfont.GetGlyphWithName (glyphName) };
 			int width = (int)(widthUnit * scale);
 			int height = (int)(heightUnit * scale);
-			float fontSize = fontSizeUnit * scale;
-			PointF posScaled = new PointF (position.X * scale, position.Y * scale);
 
-			CGImage cgImg = null;
-			byte[] bytes = new byte[width*height*4];
-			using (var context = new CGBitmapContext (bytes, width, height, 8, width*4
-			                                          , CGColorSpace.CreateDeviceRGB ()
-			                                          , CGImageAlphaInfo.PremultipliedFirst))
-			{
+			PointF offset = offsetOrNull ?? new PointF (0f, 0f);
+			offset.X *= scale;
+			offset.Y *= scale;
+
+			CGImage cgImg = SetUpBitmapContextAndDraw (width, height, (cg, rect) => {
+
 				if (backColor.Alpha > 0f)
 				{
-					context.SetFillColor (backColor);
-					context.FillRect (context.GetClipBoundingBox ());
+					cg.SetFillColor (backColor);
+					cg.FillRect (cg.GetClipBoundingBox ());
 				}
 
-				context.SetAllowsFontSmoothing (true);
-				context.SetAllowsAntialiasing (true);
-				context.SetAllowsFontSubpixelQuantization (true);
-				context.SetAllowsSubpixelPositioning (true);
-
-				// draw bounding box
-//				context.SetStrokeColor (1f, 1f);
-//				context.BeginPath ();
-//				context.AddRect (context.GetClipBoundingBox ());
-//				context.StrokePath ();
-
-				context.SetFillColor (textColor);
-				context.SetTextDrawingMode (CGTextDrawingMode.Fill);
-				context.SetFont (font);
-				context.SetFontSize (fontSize);
-				context.ShowGlyphsAtPositions(
-					new ushort[] {font.GetGlyphWithGlyphName (glyphName)}
-					, new PointF[] { posScaled }, 1);
-
-				cgImg = context.ToImage ();
-			}
+				var bounds = ctfont.GetBoundingRects (CTFontOrientation.Default, glyphs);
+				var x = rect.GetMidX () - bounds.Width / 2f;
+				var y = rect.GetMidY () - bounds.Height / 2f;
+				x += offset.X;
+				y += offset.Y;
+				
+				// draw bounds
+//				cg.SetStrokeColor (1f, 1f);
+//				bounds.X = x;
+//				bounds.Y = y;
+//				cg.StrokeRect (bounds);
+				
+				cg.SetFillColor (textColor);
+				cg.SetTextDrawingMode (CGTextDrawingMode.Fill);
+				ctfont.DrawGlyphs (cg, glyphs, new PointF[] { new PointF (x, y) }); 
+			});
 
 			return cgImg;
 		}
+
+		static CGImage SetUpBitmapContextAndDraw (int width, int height, Action<CGContext, RectangleF> drawer)
+		{
+			byte[] bytes = new byte[width*height*4];
+			using (var cg = new CGBitmapContext (bytes, width, height, 8, width*4
+			                                          , CGColorSpace.CreateDeviceRGB ()
+			                                          , CGImageAlphaInfo.PremultipliedFirst))
+			{
+				cg.SetAllowsFontSmoothing (true);
+				cg.SetAllowsAntialiasing (true);
+				cg.SetAllowsFontSubpixelQuantization (true);
+				cg.SetAllowsSubpixelPositioning (true);
+
+				drawer (cg, cg.GetClipBoundingBox ());
+
+				return cg.ToImage ();
+			}
+		}
+
 
 		public static UIImage GetUIImage (string glyphName, int width, int height
 		                                  , float fontSize
 		                                  , UIColor textColor
 		                                  , UIColor backColor
-		                                  , PointF position = default (PointF)
-		                                  , float scale = 0f)
+		                                  , float? scaleOrNull = null
+		                                  , PointF? offsetOrNull = null)
 		{
-			if (scale == 0f)
-				scale = UIScreen.MainScreen.Scale;
+			float scale = scaleOrNull ?? ScaleForDevice;
 
-			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, position, scale);
+			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
 		}
 
+		static float? _scaleForDevice;
+		static float ScaleForDevice {
+			get {
+				if (_scaleForDevice == null)
+				{
+					NSThread.MainThread.InvokeOnMainThread (() => {
+						_scaleForDevice = UIScreen.MainScreen.Scale;
+					});
+				}
+				return _scaleForDevice ?? 1f;
+			}
+		}
 
 		// Get square sized image
-		public static CGImage GetImageForBarItem (string glyphName, int sizeUnit=20, float scale=1f)
+		// using CoreText
+		public static CGImage GetImageForBarItem (string glyphName, int sizeUnit=20
+		                                          , float? scaleOrNull = null
+		                                          , PointF? offsetOrNull = null)
 		{
-			CGFont font = FontAwesomeUtil.Font;
-			if (font == null)
-				throw new InvalidOperationException ("Font not loaded");
-
+			float scale = scaleOrNull ?? ScaleForDevice;
+			float fontSize = sizeUnit * scale;
+			var ctfont = new CTFont (FontAwesomeUtil.Font, fontSize, CGAffineTransform.MakeIdentity ());
+			ushort[] glyphs =new ushort[] { ctfont.GetGlyphWithName (glyphName) };
 			int size = (int)(sizeUnit * scale);
+			PointF offset = offsetOrNull ?? new PointF (0f, 0f);
+			offset.X *= scale;
+			offset.Y *= scale;
 
-			float offsetX = (float)sizeUnit / 8.575f;
-			float offsetY = (float)sizeUnit / 7.52f;
+			CGImage img = SetUpBitmapContextForBarItemAndDraw (size, size, (cg, rect) => {
 
-			CGImage cgImg = null;
-			byte[] bytes = new byte[size * size * 4];
-			using (var context = new CGBitmapContext (bytes, size, size, 8, size*4
+				var bounds = ctfont.GetBoundingRects (CTFontOrientation.Default, glyphs);
+				var x = rect.GetMidX () - bounds.Width / 2f;
+				var y = rect.GetMidY () - bounds.Height / 2f;
+				x += offset.X;
+				y += offset.Y;
+
+				// draw bounds
+//				cg.SetStrokeColor (1f, 1f);
+//				bounds.X = x;
+//				bounds.Y = y;
+//				cg.StrokeRect (bounds);
+
+				cg.SetFillColor (1f, 1f);
+				cg.SetTextDrawingMode (CGTextDrawingMode.Fill);
+				ctfont.DrawGlyphs (cg, glyphs, new PointF[] { new PointF (x, y) }); 
+			});
+
+			return img;
+		}
+
+		static CGImage SetUpBitmapContextForBarItemAndDraw (int width, int height, Action<CGContext, RectangleF> drawer)
+		{
+			byte[] bytes = new byte[width * height * 4];
+			using (var cg = new CGBitmapContext (bytes, width, height, 8, width*4
 			                                          , CGColorSpace.CreateDeviceRGB ()
 			                                          , CGImageAlphaInfo.PremultipliedFirst))
 			{
-				context.SetAllowsFontSmoothing (true);
-				context.SetAllowsAntialiasing (true);
-				context.SetAllowsFontSubpixelQuantization (true);
-				context.SetAllowsSubpixelPositioning (true);
+				cg.SetAllowsFontSmoothing (true);
+				cg.SetAllowsAntialiasing (true);
+				cg.SetAllowsFontSubpixelQuantization (true);
+				cg.SetAllowsSubpixelPositioning (true);
 
-				// draw bounding box
-//				context.SetStrokeColor (1f, 1f);
-//				context.BeginPath ();
-//				context.AddRect (context.GetClipBoundingBox ());
-//				context.StrokePath ();
-
-				context.SetFillColor (1f, 1f);
-				context.SetTextDrawingMode (CGTextDrawingMode.Fill);
-				context.SetFont (font);
-				context.SetFontSize ((float)size);
-				// TODO: measure the glyph size and arrange
-				context.ShowGlyphsAtPoint (offsetX*scale, offsetY*scale, new ushort[] {font.GetGlyphWithGlyphName (glyphName)});
-
-				cgImg = context.ToImage ();
+				drawer (cg, cg.GetClipBoundingBox ());
+				
+				return cg.ToImage ();
 			}
-
-			return cgImg;
 		}
 
-		public static UIImage GetUIImageForBarItem (string glyphName, int sizeUnit=20, float scale=0f)
+		public static UIImage GetUIImageForBarItem (string glyphName, int sizeUnit=20
+		                                            , float? scaleOrNull = null
+		                                            , PointF? offsetOrNull = null)
 		{
-			if (scale == 0f)
-				scale = UIScreen.MainScreen.Scale;
+			float scale = scaleOrNull ?? ScaleForDevice;
 
-			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale);
+			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale, offsetOrNull);
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
 		}
 
