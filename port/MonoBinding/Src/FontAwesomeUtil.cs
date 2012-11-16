@@ -8,10 +8,17 @@ using System.Threading;
 //using System.Threading.Tasks;
 using System.Drawing;
 
+#if MONOTOUCH
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
+#elif MONOMAC
+using MonoMac.Foundation;
+using MonoMac.CoreGraphics;
+using MonoMac.CoreText;
+#endif
+
 
 namespace FontAwesomeTouch
 {
@@ -188,7 +195,7 @@ namespace FontAwesomeTouch
 			}
 		}
 
-
+#if MONOTOUCH
 		public static UIImage GetUIImage (string glyphName, int width, int height
 		                                  , float fontSize
 		                                  , UIColor textColor
@@ -201,14 +208,16 @@ namespace FontAwesomeTouch
 			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
 		}
-
+#endif
 		static float? _scaleForDevice;
 		static float ScaleForDevice {
 			get {
 				if (_scaleForDevice == null)
 				{
 					NSThread.MainThread.InvokeOnMainThread (() => {
+#if MONOTOUCH
 						_scaleForDevice = UIScreen.MainScreen.Scale;
+#endif
 					});
 				}
 				return _scaleForDevice ?? 1f;
@@ -270,6 +279,7 @@ namespace FontAwesomeTouch
 			}
 		}
 
+#if MONOTOUCH
 		public static UIImage GetUIImageForBarItem (string glyphName, int sizeUnit=20
 		                                            , float? scaleOrNull = null
 		                                            , PointF? offsetOrNull = null)
@@ -279,6 +289,7 @@ namespace FontAwesomeTouch
 			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale, offsetOrNull);
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
 		}
+#endif
 
 		static bool isLoading;
 		static bool isLoaded;

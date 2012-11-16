@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -28,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
+    <DefineConstants>MONOTOUCH;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -37,7 +38,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="GlyphNames.cs" />
-    <Compile Include="FontAwesomeUtil.cs" />
+    <Folder Include="Src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\MonoBinding\Src\FontAwesomeUtil.cs">
+      <Link>Src\FontAwesomeUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\MonoBinding\Src\GlyphNames.cs">
+      <Link>Src\GlyphNames.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>
