@@ -8,8 +8,8 @@
     <ProjectGuid>{11A93059-0049-4E9E-9E95-4A8E2B052F60}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>FontAwesomeTouch</RootNamespace>
-    <AssemblyName>FontAwesomeTouch</AssemblyName>
+    <RootNamespace>FontAwesome</RootNamespace>
+    <AssemblyName>FontAwesomeMonoTouch</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
