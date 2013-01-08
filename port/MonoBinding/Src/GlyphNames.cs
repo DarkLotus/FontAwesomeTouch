@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace FontAwesomeTouch
+namespace FontAwesome
 {
 	public static class GlyphNames
 	{

@@ -20,7 +20,7 @@ using MonoMac.CoreText;
 #endif
 
 
-namespace FontAwesomeTouch
+namespace FontAwesome
 {
 #if USE_WEAKREFERENCE
 	public class WeakHandle<TObj>
@@ -195,20 +195,6 @@ namespace FontAwesomeTouch
 			}
 		}
 
-#if MONOTOUCH
-		public static UIImage GetUIImage (string glyphName, int width, int height
-		                                  , float fontSize
-		                                  , UIColor textColor
-		                                  , UIColor backColor
-		                                  , float? scaleOrNull = null
-		                                  , PointF? offsetOrNull = null)
-		{
-			float scale = scaleOrNull ?? ScaleForDevice;
-
-			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
-			return new UIImage (cgImg, scale, UIImageOrientation.Up);
-		}
-#endif
 		static float? _scaleForDevice;
 		static float ScaleForDevice {
 			get {
@@ -278,18 +264,6 @@ namespace FontAwesomeTouch
 				return cg.ToImage ();
 			}
 		}
-
-#if MONOTOUCH
-		public static UIImage GetUIImageForBarItem (string glyphName, int sizeUnit=20
-		                                            , float? scaleOrNull = null
-		                                            , PointF? offsetOrNull = null)
-		{
-			float scale = scaleOrNull ?? ScaleForDevice;
-
-			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale, offsetOrNull);
-			return new UIImage (cgImg, scale, UIImageOrientation.Up);
-		}
-#endif
 
 		static bool isLoading;
 		static bool isLoaded;
@@ -371,6 +345,36 @@ namespace FontAwesomeTouch
 
 			return null;
 		}
+
+
+#if MONOTOUCH
+		public static UIImage GetUIImage (string glyphName, int width, int height
+		                                  , float fontSize
+		                                  , UIColor textColor
+		                                  , UIColor backColor
+		                                  , float? scaleOrNull = null
+		                                  , PointF? offsetOrNull = null)
+		{
+			float scale = scaleOrNull ?? ScaleForDevice;
+			
+			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
+			return new UIImage (cgImg, scale, UIImageOrientation.Up);
+		}
+
+		public static UIImage GetUIImageForBarItem (string glyphName, int sizeUnit=20
+		                                            , float? scaleOrNull = null
+		                                            , PointF? offsetOrNull = null)
+		{
+			float scale = scaleOrNull ?? ScaleForDevice;
+			
+			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale, offsetOrNull);
+			return new UIImage (cgImg, scale, UIImageOrientation.Up);
+		}
+#endif
+		
+
+
+
 	}
 }
 
