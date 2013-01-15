@@ -225,7 +225,7 @@ namespace FontAwesome
 				{
 					NSThread.MainThread.InvokeOnMainThread (() => {
 #if MONOTOUCH
-						_scaleForDevice = UIScreen.MainScreen.Scale;
+						_scaleOfMainScreen = UIScreen.MainScreen.Scale;
 #elif MONOMAC
 						_scaleOfMainScreen = NSScreen.MainScreen.BackingScaleFactor;
 #endif
@@ -420,7 +420,7 @@ namespace FontAwesome
 		                                  , float? scaleOrNull = null
 		                                  , PointF? offsetOrNull = null)
 		{
-			float scale = scaleOrNull ?? ScaleForDevice;
+			float scale = scaleOrNull ?? ScaleOfMainScreen;
 			
 			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
@@ -430,7 +430,7 @@ namespace FontAwesome
 		                                            , float? scaleOrNull = null
 		                                            , PointF? offsetOrNull = null)
 		{
-			float scale = scaleOrNull ?? ScaleForDevice;
+			float scale = scaleOrNull ?? ScaleOfMainScreen;
 			
 			CGImage cgImg = GetImageForBarItem (glyphName, sizeUnit, scale, offsetOrNull);
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
@@ -445,7 +445,7 @@ namespace FontAwesome
 //		                                  , float? scaleOrNull = null
 //		                                  , PointF? offsetOrNull = null)
 //		{
-//			float scale = scaleOrNull ?? ScaleForDevice;
+//			float scale = scaleOrNull ?? ScaleOfMainScreen;
 //
 //			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
 //			return new NSImage (cgImg, new SizeF (width, height));
