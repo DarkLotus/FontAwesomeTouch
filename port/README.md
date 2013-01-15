@@ -1,5 +1,5 @@
-FontAwesome Mono Binding
-========================
+FontAwesome MonoTouch and MonoMac Binding
+=========================================
 
 This library code provides how use the FontAwesome font as private resource of Apps in iOS
 and also in Mac. And the samples illustrates how use the library in each platform iOS and Mac.
