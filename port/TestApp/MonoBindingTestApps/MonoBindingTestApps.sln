@@ -85,6 +85,6 @@ Global
 		{56C49D58-46E5-41A7-B44F-7874488A27C2} = {F26D9F11-E695-413F-BC64-1E5DD1E26E66}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = TestAppForMonoTouch\TestAppForMonoTouch.csproj
+		StartupItem = TestAppForMonoMac\TestAppForMonoMac.csproj
 	EndGlobalSection
 EndGlobal

@@ -1,3 +1,23 @@
+// 
+// MainWindowController.cs
+//  
+// Author:
+//       Junichi OKADOME (tome@tomesoft.net)
+// 
+// Copyright 2013 tomesoft.net
+//	
+//	Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//		
+//		http://www.apache.org/licenses/LICENSE-2.0
+//		
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -158,7 +178,7 @@ namespace TestAppForMonoMac
 		
 		void LoadFontAndGatherGlyphInfos (int unitSize, Action<List<GlyphInfo>> endHandler)
 		{
-			float scale = 1.0f;
+			float scale = Window.BackingScaleFactor;
 			Task.Factory.StartNew (() => {
 				try {
 					Type typGlyphNames = typeof (FontAwesome.GlyphNames);
@@ -189,7 +209,7 @@ namespace TestAppForMonoMac
 
 		public void ExportEveryGlyphsAsPNGTo (string path)
 		{
-			float scale = 1f; // TODO:
+			float scale = Window.BackingScaleFactor;
 			var glyphInfos = _tableViewSource.GlyphInfos;
 			//actvw.StartAnimating ();
 			Task.Factory.StartNew (() => {
