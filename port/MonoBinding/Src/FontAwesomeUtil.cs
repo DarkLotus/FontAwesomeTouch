@@ -17,6 +17,7 @@ using MonoTouch.CoreText;
 using MonoMac.Foundation;
 using MonoMac.CoreGraphics;
 using MonoMac.CoreText;
+using MonoMac.AppKit;
 #endif
 
 
@@ -141,7 +142,8 @@ namespace FontAwesome
 			float scale = scaleOrNull ?? ScaleForDevice;
 			float fontSize = fontSizeUnit * scale;
 			var ctfont = new CTFont (FontAwesomeUtil.Font, fontSize, CGAffineTransform.MakeIdentity ());
-			ushort[] glyphs =new ushort[] { ctfont.GetGlyphWithName (glyphName) };
+			float fontMetric = ctfont.AscentMetric + ctfont.DescentMetric;
+			ushort[] glyphs = new ushort[] { ctfont.GetGlyphWithName (glyphName) };
 			int width = (int)(widthUnit * scale);
 			int height = (int)(heightUnit * scale);
 
@@ -159,7 +161,10 @@ namespace FontAwesome
 
 				var bounds = ctfont.GetBoundingRects (CTFontOrientation.Default, glyphs);
 				var x = rect.GetMidX () - bounds.Width / 2f;
-				var y = rect.GetMidY () - bounds.Height / 2f;
+				x -= bounds.GetMinX ();
+				var y = rect.GetMidY () - fontMetric / 2f;
+				y += -ctfont.UnderlinePosition + ctfont.UnderlineThickness;
+
 				x += offset.X;
 				y += offset.Y;
 				
@@ -217,9 +222,10 @@ namespace FontAwesome
 		                                          , PointF? offsetOrNull = null)
 		{
 			float scale = scaleOrNull ?? ScaleForDevice;
-			float fontSize = sizeUnit * scale;
+			float fontSize = sizeUnit * scale * 0.9f; // 0.9f is a magic value for adjust
 			var ctfont = new CTFont (FontAwesomeUtil.Font, fontSize, CGAffineTransform.MakeIdentity ());
-			ushort[] glyphs =new ushort[] { ctfont.GetGlyphWithName (glyphName) };
+			float fontMetric = ctfont.AscentMetric + ctfont.DescentMetric;
+			ushort[] glyphs = new ushort[] { ctfont.GetGlyphWithName (glyphName) };
 			int size = (int)(sizeUnit * scale);
 			PointF offset = offsetOrNull ?? new PointF (0f, 0f);
 			offset.X *= scale;
@@ -229,15 +235,54 @@ namespace FontAwesome
 
 				var bounds = ctfont.GetBoundingRects (CTFontOrientation.Default, glyphs);
 				var x = rect.GetMidX () - bounds.Width / 2f;
-				var y = rect.GetMidY () - bounds.Height / 2f;
+				x -= bounds.GetMinX ();
+				var y = rect.GetMidY () - fontMetric / 2f;
+				y += -ctfont.UnderlinePosition + ctfont.UnderlineThickness;
+
 				x += offset.X;
 				y += offset.Y;
 
-				// draw bounds
-//				cg.SetStrokeColor (1f, 1f);
-//				bounds.X = x;
-//				bounds.Y = y;
-//				cg.StrokeRect (bounds);
+				#region for_debug
+//				Console.Write ("Glyph geom {0} : {1}", glyphName, bounds);
+//				if (rect.Width < bounds.Width || rect.Height < bounds.Height) {
+//					Console.Write (" Glyph geom larger than bounds");
+//				}
+//				Console.WriteLine ();
+//
+//				// draw underline
+//				cg.SaveState ();
+//				cg.SetStrokeColor (1f, 0.4f);
+//				cg.SetLineWidth (ctfont.UnderlineThickness);
+//				cg.BeginPath ();
+//				cg.MoveTo (rect.GetMinX (), rect.GetMidY ()+ctfont.UnderlinePosition);
+//				cg.AddLineToPoint (rect.GetMaxX (), rect.GetMidY ()+ctfont.UnderlinePosition);
+//				cg.StrokePath ();
+//
+//				cg.SetLineWidth (1f);
+//				cg.SetStrokeColor (1f, 0.5f);
+//				cg.BeginPath ();
+//				cg.StrokeLineSegments (new PointF[] {
+//					new PointF (rect.GetMinX (), rect.GetMidY () - (fontMetric / 2f))
+//					, new PointF (rect.GetMaxX (), rect.GetMidY () - (fontMetric / 2f))});
+//				cg.StrokeLineSegments (new PointF[] {
+//					new PointF (rect.GetMinX (), rect.GetMidY () + (fontMetric / 2f))
+//					, new PointF (rect.GetMaxX (), rect.GetMidY () + (fontMetric / 2f))});
+//
+//				cg.RestoreState ();
+//				// draw diagonal lines
+//				cg.SetStrokeColor (1f, 0.5f);
+//				cg.BeginPath ();
+//				cg.MoveTo (rect.GetMinX (), rect.GetMinY ());
+//				cg.AddLineToPoint (rect.GetMaxX (), rect.GetMaxY ());
+//				cg.StrokePath ();
+//				cg.BeginPath ();
+//				cg.MoveTo (rect.GetMinX (), rect.GetMaxY ());
+//				cg.AddLineToPoint (rect.GetMaxX (), rect.GetMinY ());
+//				cg.StrokePath ();
+//				// draw bounds
+//				cg.StrokeRect (new RectangleF (x + bounds.X, y + bounds.Y, bounds.Width, bounds.Height));
+
+				#endregion
 
 				cg.SetFillColor (1f, 1f);
 				cg.SetTextDrawingMode (CGTextDrawingMode.Fill);
@@ -371,7 +416,21 @@ namespace FontAwesome
 			return new UIImage (cgImg, scale, UIImageOrientation.Up);
 		}
 #endif
-		
+
+#if MONOMAC
+//		public static NSImage GetNSImage (string glyphName, int width, int height
+//		                                  , float fontSize
+//		                                  , NSColor textColor
+//		                                  , NSColor backColor
+//		                                  , float? scaleOrNull = null
+//		                                  , PointF? offsetOrNull = null)
+//		{
+//			float scale = scaleOrNull ?? ScaleForDevice;
+//
+//			CGImage cgImg = GetImage (glyphName, width, height, fontSize, textColor.CGColor, backColor.CGColor, scale, offsetOrNull);
+//			return new NSImage (cgImg, new SizeF (width, height));
+//		}
+#endif
 
 
 
